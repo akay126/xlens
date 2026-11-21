@@ -62,3 +62,10 @@ These checks used `CODEX_HOME=<tmp>/home` and a git copy of the repo's `.agents/
   - Without `< /dev/null`, `codex exec` waits for more input on stdin and appears to hang.
 
 Not verified for Codex: a full model session that loads the server through the installed plugin. The temporary home had no credentials, and the real home was not modified.
+
+## Verified after publication (2026-11-20)
+
+- `xlens-ai` 0.2.0 is on PyPI. `uvx --from xlens-ai xlens --help` and `xlens query find examples/sample_model.xlsx --text NOI` worked from an empty uv cache.
+- Claude Code 2.1.322, fresh config directory: `claude plugin marketplace add akay126/xlens` and `claude plugin install xlens@xlens` succeeded. `claude mcp list` showed `plugin:xlens:xlens: uvx --from xlens-ai xlens mcp - ✔ Connected`.
+- Codex 0.159.3, fresh `CODEX_HOME`: `codex plugin marketplace add akay126/xlens` and `codex plugin add xlens@xlens` succeeded, and `codex mcp list` showed the `xlens` server enabled with `uvx --from xlens-ai xlens mcp`.
+- Still not tested: the inline map in Claude Desktop chat.
