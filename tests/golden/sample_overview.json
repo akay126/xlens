@@ -1,0 +1,220 @@
+{
+  "counts": {
+    "cells": 106,
+    "circular_refs": 0,
+    "formulas": 54,
+    "hardcodes": 1,
+    "rows": 25
+  },
+  "drivers_noi": [
+    "Inputs!B8",
+    "Inputs!B3",
+    "Inputs!B5",
+    "Cash Flow!F9",
+    "Inputs!B6",
+    "Inputs!B9"
+  ],
+  "flow": [
+    {
+      "connects_to": [
+        "Revenue",
+        "Operating Expenses",
+        "Debt Service",
+        "Exit",
+        "Returns"
+      ],
+      "name": "Inputs",
+      "sheet": "Inputs"
+    },
+    {
+      "connects_to": [
+        "Net Operating Income"
+      ],
+      "name": "Revenue",
+      "sheet": "Cash Flow"
+    },
+    {
+      "connects_to": [
+        "Net Operating Income"
+      ],
+      "name": "Operating Expenses",
+      "sheet": "Cash Flow"
+    },
+    {
+      "connects_to": [
+        "Debt Service",
+        "Cash Flow",
+        "Exit"
+      ],
+      "name": "Net Operating Income",
+      "sheet": "Cash Flow"
+    },
+    {
+      "connects_to": [
+        "Cash Flow"
+      ],
+      "name": "Debt Service",
+      "sheet": "Cash Flow"
+    },
+    {
+      "connects_to": [
+        "Returns"
+      ],
+      "name": "Cash Flow",
+      "sheet": "Cash Flow"
+    },
+    {
+      "connects_to": [
+        "Returns"
+      ],
+      "name": "Exit",
+      "sheet": "Returns"
+    },
+    {
+      "connects_to": [],
+      "name": "Returns",
+      "sheet": "Returns"
+    }
+  ],
+  "kpis": [
+    {
+      "cell": "Returns!B9",
+      "name": "Equity Multiple",
+      "scenarios": [
+        {
+          "cell": "Returns!B9",
+          "display": "3.45x",
+          "header": "Low"
+        },
+        {
+          "cell": "Returns!C9",
+          "display": "3.01x",
+          "header": "Base"
+        },
+        {
+          "cell": "Returns!D9",
+          "display": "2.64x",
+          "header": "High"
+        }
+      ]
+    },
+    {
+      "cell": "Returns!B8",
+      "name": "Total Profit",
+      "scenarios": [
+        {
+          "cell": "Returns!B8",
+          "display": "$4,414,140",
+          "header": "Low"
+        },
+        {
+          "cell": "Returns!C8",
+          "display": "$3,620,486",
+          "header": "Base"
+        },
+        {
+          "cell": "Returns!D8",
+          "display": "$2,948,933",
+          "header": "High"
+        }
+      ]
+    },
+    {
+      "cell": "Cash Flow!G14",
+      "name": "DSCR",
+      "scenarios": [
+        {
+          "cell": "Cash Flow!C14",
+          "display": "1.47x",
+          "header": "Year 1"
+        },
+        {
+          "cell": "Cash Flow!D14",
+          "display": "1.51x",
+          "header": "Year 2"
+        },
+        {
+          "cell": "Cash Flow!E14",
+          "display": "1.56x",
+          "header": "Year 3"
+        },
+        {
+          "cell": "Cash Flow!F14",
+          "display": "1.64x",
+          "header": "Year 4"
+        },
+        {
+          "cell": "Cash Flow!G14",
+          "display": "1.70x",
+          "header": "Year 5"
+        }
+      ]
+    },
+    {
+      "cell": "Cash Flow!G11",
+      "name": "Net Operating Income",
+      "scenarios": [
+        {
+          "cell": "Cash Flow!C11",
+          "display": "$453,200",
+          "header": "Year 1"
+        },
+        {
+          "cell": "Cash Flow!D11",
+          "display": "$467,836",
+          "header": "Year 2"
+        },
+        {
+          "cell": "Cash Flow!E11",
+          "display": "$482,937",
+          "header": "Year 3"
+        },
+        {
+          "cell": "Cash Flow!F11",
+          "display": "$507,511",
+          "header": "Year 4"
+        },
+        {
+          "cell": "Cash Flow!G11",
+          "display": "$523,811",
+          "header": "Year 5"
+        }
+      ]
+    },
+    {
+      "cell": "Returns!B5",
+      "name": "Exit Cap Rate",
+      "scenarios": [
+        {
+          "cell": "Returns!B5",
+          "display": "5.5%",
+          "header": "Low"
+        },
+        {
+          "cell": "Returns!C5",
+          "display": "6.0%",
+          "header": "Base"
+        },
+        {
+          "cell": "Returns!D5",
+          "display": "6.5%",
+          "header": "High"
+        }
+      ]
+    }
+  ],
+  "sheets": [
+    {
+      "name": "Inputs",
+      "role": "input"
+    },
+    {
+      "name": "Cash Flow",
+      "role": "calc"
+    },
+    {
+      "name": "Returns",
+      "role": "calc"
+    }
+  ]
+}

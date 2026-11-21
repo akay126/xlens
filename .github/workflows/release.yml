@@ -1,0 +1,27 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write   # PyPI trusted publishing
+      contents: write   # attach assets to the GitHub release
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv build
+      - name: Zip plugins
+        run: |
+          mkdir -p plugin-dist
+          (cd plugins/claude && zip -r ../../plugin-dist/xlens-claude-plugin.zip .)
+          (cd plugins/codex && zip -r ../../plugin-dist/xlens-codex-plugin.zip .)
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
+          skip-existing: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: plugin-dist/*.zip

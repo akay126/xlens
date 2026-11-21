@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "xlens-ai"
+version = "0.2.0"
+description = "Explain Excel financial models from their real formulas: dependency map, KPIs, hardcodes, and an MCP server for Claude and Codex."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "Adrian Kay" }]
+keywords = ["excel", "xlsx", "financial-model", "real-estate", "mcp", "audit"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Office/Business :: Financial :: Spreadsheet",
+]
+dependencies = ["openpyxl>=3.1", "networkx>=3.0", "mcp>=2.3,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-playwright>=0.5", "ruff>=0.6"]
+
+[project.urls]
+Homepage = "https://github.com/akay126/xlens"
+Issues = "https://github.com/akay126/xlens/issues"
+
+[project.scripts]
+xlens = "xlens.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/xlens"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "tests", "examples", "scripts", "README.md", "LICENSE", "pyproject.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B"]
+ignore = ["E501"]

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><title>Xlens map</title>
+<style>/*CSS*/
+body { margin: 0; background: var(--bg); }
+.xe-shell { padding: 12px 16px; max-width: 1600px; margin: 0 auto; }
+.xe-shell h1 { font-size: 1rem; margin: 0 0 8px; overflow-wrap: anywhere; }
+#xe-root { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.7rem; }
+.xe-kpis { display: flex; flex-wrap: wrap; gap: 6px; }
+.xe-kpi-i { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 4px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 3px 6px; font-size: 0.8rem; min-width: 0; max-width: 100%; }
+.xe-kpi-i button { background: none; border: 0; border-radius: 5px; padding: 2px 5px; cursor: pointer; white-space: nowrap; }
+.xe-kpi-i button:hover { background: var(--xe-soft); }
+.xe-kpi-i .xe-kname { font-weight: 600; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+.xe-kpi-i .xe-kv { font-family: var(--xe-mono); font-size: 0.78rem; }
+.xe-kpi-i .xe-kv i { font-style: normal; color: var(--text-muted); font-family: var(--font); margin-right: 3px; }
+.xe-kpi-i .xe-ksep { color: var(--border); }
+.xe-flagdot { fill: var(--accent-red); }
+.xe-node.xe-ai .xe-box { stroke: #7c3aed; stroke-width: 2; }
+.xe-dim .xe-node.xe-ai { opacity: 1; }
+.xe-group.xe-ai { box-shadow: inset 0 0 0 2px #7c3aed; }
+.xe-flags { margin: 0; font-size: 0.78rem; color: var(--accent-red); }
+.xe-ask { justify-self: start; align-self: flex-start; border: 1px solid #7c3aed; background: var(--card); color: #5b21b6 !important; border-radius: 6px; padding: 0.35rem 0.7rem; cursor: pointer; text-align: left; font-size: 0.82rem; }
+.xe-ask:hover { background: #f3effd; }
+.xe-askbox { width: 100%; font: inherit; font-size: 0.78rem; padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px; }
+.xe-status { margin: 0 0 8px; font-size: 0.8rem; color: var(--text-muted); }
+</style></head>
+<body><div class="xe-shell"><h1 id="xe-title">Xlens</h1><p class="xe-status" id="xe-status" hidden></p><div id="xe-root"><p class="xe-muted">Waiting for a model…</p></div></div>
+<script>/*EXPLORER*/</script>
+<script>/*BRIDGE*/</script>
+<script>
+(function () {
+  'use strict';
+  var MODE = /*MODE*/, DATA = /*DATA*/, root = document.getElementById('xe-root'), api = null, lastFocus = null;
+  function status(msg) {
+    var el = document.getElementById('xe-status');
+    el.textContent = msg || '';
+    el.hidden = !msg;
+  }
+  function applyFocus(ev) {
+    lastFocus = ev;  // kept so a focus that arrives before (or across) a model load still lands
+    if (api) api.focus(ev.focus || [], ev.mode);
+  }
+  function show(d) {
+    document.getElementById('xe-title').textContent = d.model || 'Xlens';
+    if (api) api.setData(d);
+    else api = window.XlensExplorer.mount(root, d, window.XlensBridge ? { onAsk: window.XlensBridge.ask } : { askLabel: 'Copy question' });
+    if (lastFocus) api.focus(lastFocus.focus || [], lastFocus.mode);
+  }
+  if (MODE === 'tab') {
+    var k = new URLSearchParams(location.search).get('k') || '';
+    var q = '?k=' + encodeURIComponent(k);
+    var reqNo = 0;  // only the newest model fetch may render; an older, slower response is ignored
+    var load = function () {
+      var mine = ++reqNo;
+      fetch('/model.json' + q, { cache: 'no-store' })
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(function (d) { if (mine === reqNo && d && d.nodes) { status(''); show(d); } })
+        .catch(function () { if (mine === reqNo) status('Could not load the model. The map server may have stopped; ask for the map again.'); });
+    };
+    load();
+    var es = new EventSource('/events' + q);
+    es.onmessage = function (e) {
+      var ev;
+      try { ev = JSON.parse(e.data); } catch (err) { return; }
+      if (!ev || typeof ev !== 'object') return;
+      if (ev.mode === 'model') { lastFocus = null; load(); } else applyFocus(ev);  // old focus belongs to the old model
+    };
+  } else {
+    if (DATA) show(DATA);
+    if (window.XlensBridge && window.XlensBridge.onResult) window.XlensBridge.onResult(function (r) {
+      if (!r) return;  // r = { result: tool result object, payload: map payload from _meta or null, error? }
+      if (r.error) { if (!api) status(r.error); return; }
+      if (r.payload) status('');
+      if (r.payload) { lastFocus = null; show(r.payload); }
+      if (r.result && r.result.focus) applyFocus({ focus: r.result.focus, mode: r.result.mode });
+    });
+  }
+})();
+</script></body></html>

@@ -1,0 +1,12 @@
+{
+  "name": "xlens",
+  "interface": { "displayName": "Xlens" },
+  "plugins": [
+    {
+      "name": "xlens",
+      "source": { "source": "local", "path": "./plugins/codex" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL", "products": ["CODEX"] },
+      "category": "Productivity"
+    }
+  ]
+}

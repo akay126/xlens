@@ -1,0 +1,6 @@
+{
+  "name": "xlens",
+  "owner": { "name": "Adrian Kay" },
+  "description": "Xlens: explain Excel financial models from their real formulas.",
+  "plugins": [ { "name": "xlens", "source": "./plugins/claude", "description": "Explain Excel financial models with a live model map." } ]
+}

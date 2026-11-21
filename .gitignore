@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+dist/
+build/
+plugin-dist/
+.pytest_cache/
+.ruff_cache/
+uv.lock
+*.html
+!src/xlens/templates/*.html
+*.xlsx
+!examples/sample_model.xlsx
+.DS_Store
