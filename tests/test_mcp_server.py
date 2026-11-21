@@ -191,6 +191,7 @@ def test_own_validation_errors_are_plain(srv, models, capsys):
 def test_user_path_expanded(srv, models, monkeypatch):
     home = models["sample"].parent
     monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("USERPROFILE", str(home))  # Windows expanduser reads this
     res = srv.find("~/" + models["sample"].name, "NOI")
     assert not res.is_error
 

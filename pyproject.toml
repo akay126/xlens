@@ -37,6 +37,7 @@ include = ["src", "tests", "examples", "scripts", "README.md", "LICENSE", "pypro
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]  # e2e imports tests.fixtures
 
 [tool.ruff]
 line-length = 120
